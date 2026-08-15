@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elden Bingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="landing">
+  <div class="vignette"></div>
+
+  <main class="landing-wrap">
+    <header class="landing-header">
+      <p class="eyebrow">A companion for the Lands Between</p>
+      <h1>ELDEN <span>BINGO</span></h1>
+      <p class="tagline">Build a shared objective board. Mark squares live as your party plays.</p>
+    </header>
+
+    {% if error %}
+      <div class="banner banner-error">{{ error }}</div>
+    {% endif %}
+
+    <div class="panels">
+      <section class="panel">
+        <h2><span class="rune">I</span> Forge a New Board</h2>
+        <form action="{{ url_for('create') }}" method="post" class="form">
+          <label>
+            Your name
+            <input type="text" name="name" maxlength="20" placeholder="Tarnished" required>
+          </label>
+
+          <label>
+            Board size
+            <select name="size">
+              <option value="3">3 × 3</option>
+              <option value="4">4 × 4</option>
+              <option value="5" selected>5 × 5</option>
+              <option value="6">6 × 6</option>
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Categories <span class="hint">(none checked = all)</span></legend>
+            <div class="check-grid">
+              {% for c in categories %}
+                <label class="check"><input type="checkbox" name="categories" value="{{ c }}"> {{ c }}</label>
+              {% endfor %}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Difficulty <span class="hint">(none checked = all)</span></legend>
+            <div class="check-grid">
+              {% for d in difficulties %}
+                <label class="check"><input type="checkbox" name="difficulties" value="{{ d }}"> {{ d }}</label>
+              {% endfor %}
+            </div>
+          </fieldset>
+
+          <button type="submit" class="btn btn-primary">Create Room</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2><span class="rune">II</span> Join an Existing Board</h2>
+        <form action="{{ url_for('join') }}" method="post" class="form form-join">
+          <label>
+            Your name
+            <input type="text" name="name" maxlength="20" placeholder="Tarnished" required>
+          </label>
+          <label>
+            Room code
+            <input type="text" name="code" maxlength="5" placeholder="FOG7X" required
+                   style="text-transform:uppercase" autocomplete="off">
+          </label>
+          <button type="submit" class="btn btn-secondary">Join Room</button>
+        </form>
+        <p class="hint hint-block">Ask whoever forged the board for the 5-character room code.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

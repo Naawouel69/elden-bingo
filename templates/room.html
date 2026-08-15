@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elden Bingo — Room {{ code }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="room"
+      data-code="{{ code }}"
+      data-name="{{ name }}"
+      data-size="{{ size }}"
+      data-host="{{ 'true' if name == host_name else 'false' }}">
+  <div class="vignette"></div>
+
+  <header class="room-header">
+    <div class="room-title">
+      <p class="eyebrow">Shared board</p>
+      <h1>ELDEN <span>BINGO</span></h1>
+    </div>
+    <div class="room-meta">
+      <div class="code-badge" title="Click to copy" id="codeBadge">
+        <span class="code-label">Room</span>
+        <span class="code-value">{{ code }}</span>
+      </div>
+      <div class="you-badge">
+        <span class="code-label">Playing as</span>
+        <span class="code-value">{{ name }}</span>
+      </div>
+    </div>
+  </header>
+
+  {% if note %}
+  <div class="banner banner-note" id="noteBanner">{{ note }}</div>
+  {% endif %}
+
+  <main class="room-wrap">
+    <section class="board-area">
+      <div class="board" id="board" style="--size: {{ size }};">
+        {% for cell in board %}
+        <button class="cell diff-{{ cell.difficulty|lower }}"
+                id="cell-{{ loop.index0 }}"
+                data-index="{{ loop.index0 }}"
+                data-category="{{ cell.category }}"
+                data-difficulty="{{ cell.difficulty }}">
+          <span class="cell-tag">{{ cell.category }} · {{ cell.difficulty }}</span>
+          <span class="cell-text">{{ cell.text }}</span>
+          <span class="cell-marks"></span>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="panel-card">
+        <h2>Tarnished present</h2>
+        <ul class="player-list" id="playerList"></ul>
+      </div>
+
+      <div class="panel-card host-controls" id="hostControls" hidden>
+        <h2>Host controls</h2>
+        <button class="btn btn-secondary" id="rerollBtn">Reroll board</button>
+        <button class="btn btn-ghost" id="resetBtn">Reset marks</button>
+      </div>
+
+      <div class="panel-card">
+        <h2>Events</h2>
+        <ul class="log-list" id="logList"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <div class="bingo-toast" id="bingoToast">BINGO!</div>
+
+  <script type="application/json" id="initialState">
+    {{ {"marks": marks, "note": note} | tojson }}
+  </script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
