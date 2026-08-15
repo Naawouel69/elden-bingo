@@ -9,7 +9,7 @@ from objectives import OBJECTIVES
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "elden-bingo-dev-key"
-socketio = SocketIO(app, async_mode="eventlet", cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
 
 CATEGORIES = sorted({o["category"] for o in OBJECTIVES})
 DIFFICULTIES = ["Easy", "Medium", "Hard"]
